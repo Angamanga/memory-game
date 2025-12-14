@@ -52,6 +52,7 @@ start_button = tk.Button(root, text="Start Game", font=("Helvetica", 18))
 restart_button = tk.Button(root, text="Restart", font=("Helvetica", 18))
 countdown_label = tk.Label(root, text="", font=("Helvetica", 32, "bold"), bg=BG, fg=TEXT)
 
+# Helper function to style buttons
 def style_button(btn):
     btn.config(
         relief="flat",
@@ -95,6 +96,7 @@ def check_sequence():
     
     result_label.pack(pady=20)
 
+# Helper function to show the guessing UI
 def show_guess_ui():
     global hint_label, user_input, submit_button
     sequence_label.pack_forget()
@@ -116,6 +118,7 @@ def start_countdown(seconds):
     )
     root.after(1000, lambda: start_countdown(seconds - 1))
 
+# Function to start/restart the game
 def start_game():
     global sequence, user_input, hint_label, submit_button, result_label, number_of_tries, countdown_label
 
@@ -143,11 +146,13 @@ def start_game():
     sequence_label.pack(pady=20)
     hint_label.config(text=f"Hint (shuffled): {' '.join(map(str, hint))}")
     submit_button.config(command=check_sequence)
-
+    
+    # Show restart button
     restart_button.config(command=start_game)
     restart_button.place(relx=1.0, rely=1.0, anchor="se", x=-10, y=-10)
 
-        
+# Show start button initially
 start_button.config(command=start_game)
 start_button.pack(pady=30)
+
 root.mainloop()
