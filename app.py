@@ -20,6 +20,8 @@ user_input = tk.Entry(root, font=("Helvetica", 18))
 submit_button = tk.Button(root, text="Submit", font=("Helvetica", 18))
 start_button = tk.Button(root, text="Start Game", font=("Helvetica", 18))
 restart_button = tk.Button(root, text="Restart", font=("Helvetica", 18))
+countdown_label = tk.Label(root, text="", font=("Helvetica", 32, "bold"))
+
 
 # Function to check the user's input against the sequence
 def check_sequence():
@@ -46,10 +48,29 @@ def check_sequence():
         )
     
     result_label.pack(pady=20)
-    
+def show_guess_ui():
+    global hint_label, user_input, submit_button
+    sequence_label.pack_forget()
+    hint_label.pack(pady=10)
+    user_input.pack(pady=20)
+    submit_button.pack(pady=20)
+
+def start_countdown(seconds):
+    global countdown_label
+
+    if seconds == 0:
+        countdown_label.destroy()
+        show_guess_ui()
+        return
+
+    countdown_label.config(
+        text=f"Memorise… {seconds}",
+        font=("Helvetica", 32, "bold")
+    )
+    root.after(1000, lambda: start_countdown(seconds - 1))
+
 def start_game():
-    global sequence, user_input, hint_label, submit_button, result_label, number_of_tries
-    global sequence, userInput, submit_button, result_label, number_of_tries
+    global sequence, user_input, hint_label, submit_button, result_label, number_of_tries, countdown_label
 
     # cleaning up UI if user is playing again
     start_button.pack_forget()
@@ -66,16 +87,16 @@ def start_game():
     hint = sequence.copy()
     random.shuffle(hint)
     instructions.pack(pady=10)
+
+    # showing sequence for 3 seconds, then hiding it and showing input field
+    countdown_label.pack(pady=10)
+    start_countdown(3)
+
     sequence_label.config(text=" ".join(map(str, sequence)))
     sequence_label.pack(pady=20)
     hint_label.config(text=f"Hint (shuffled): {' '.join(map(str, hint))}")
     submit_button.config(command=check_sequence)
 
-    # showing sequence for 3 seconds, then hiding it and showing input field
-    root.after(3000, sequence_label.pack_forget)
-    root.after(3000, lambda: hint_label.pack(pady=10))
-    root.after(3000, lambda: user_input.pack(pady=20))
-    root.after(3000, lambda: submit_button.pack(pady=20))
     restart_button.config(command=start_game)
     restart_button.place(relx=1.0, rely=1.0, anchor="se", x=-10, y=-10)
 
